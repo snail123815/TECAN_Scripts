@@ -45,7 +45,9 @@ Public Class TestClass
         START_WELL As String,
         END_WELL As String,
         sample_name As String,
-        plate_size As Integer
+        plate_size As Integer,
+        Optional sample_color As String = "55bb55",
+        Optional empty_color As String = "555555"
         ) As String(,)
         Dim plate_array(plate_size, 3) As String
         Dim rlen As Integer
@@ -81,12 +83,12 @@ Public Class TestClass
                 current_col >= tl_col AndAlso current_col <= br_col Then
                 plate_array(i, 1) = "S"
                 plate_array(i, 2) = String.Format("{0} {1}", sample_name, sample_idx)
-                plate_array(i, 3) = "55bb55"
+                plate_array(i, 3) = sample_color
                 sample_idx += 1
             Else
                 plate_array(i, 1) = "-"
                 plate_array(i, 2) = "-"
-                plate_array(i, 3) = "555555"
+                plate_array(i, 3) = empty_color
             End If
         Next
         Return plate_array
@@ -98,7 +100,9 @@ Public Class TestClass
         N_SAMPLES As Integer,
         OFFSET_SAMPLES As Integer,
         sample_name As String,
-        plate_size As Integer
+        plate_size As Integer,
+        Optional sample_color As String = "55bb55",
+        Optional empty_color As String = "555555"
         ) As String(,)
         Dim plate_array(plate_size, 3) As String
         'VB actually created an array of plate_size + 1 elements, 4 slots
@@ -108,11 +112,11 @@ Public Class TestClass
             If OFFSET_SAMPLES < i AndAlso i <= (OFFSET_SAMPLES + N_SAMPLES) Then
                 plate_array(i, 1) = "S"
                 plate_array(i, 2) = String.Format("{0} {1}", sample_name, i)
-                plate_array(i, 3) = "55bb55"
+                plate_array(i, 3) = sample_color
             Else
                 plate_array(i, 1) = "-"
                 plate_array(i, 2) = "-"
-                plate_array(i, 3) = "555555"
+                plate_array(i, 3) = empty_color
             End If
         Next
         Return plate_array
