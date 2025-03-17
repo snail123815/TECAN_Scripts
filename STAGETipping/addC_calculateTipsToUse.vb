@@ -55,6 +55,7 @@ Public Class TestClass
         Host.SetVariable("bitTipsNeeded", bitTipsNeeded)
         Host.SetVariable("bitTipsWetDispense", bitTipsWetDispense)
         Host.SetVariable("bitTipsDryDispense", bitTipsDryDispense)
+        Host.SetVariable("nDryDispense", nDryDispense)
 
     End Sub
 End Class
