@@ -94,8 +94,6 @@ Public Class TestClass
         Return plate_array
     End Function
 
-
-
     Public Function generate_plate_map_linear(
         N_SAMPLES As Integer,
         OFFSET_SAMPLES As Integer,
@@ -174,21 +172,36 @@ Public Class TestClass
         )
         Host.SetVariable("source_map_file", source_map_file)
 
+        Dim NREP_DILUTION As Integer = Host.GetVariable("NREP_DILUTION")
+        Dim NREP_SPOTTING As Integer = Host.GetVariable("NREP_SPOTTING")
+        Dim NSPOTS As Integer = Host.GetVariable("NSPOTS")
+
         ' Generate plate map
-        'Dim plate_array As String(,) = generate_plate_map_linear(N_SAMPLES, 0, "Stock", 24)
-        Dim plate_array As String(,) = generate_plate_map_square("a2", "b6", "Stock", 24)
+        Dim plate_array As String(,) = generate_plate_map_linear(N_SAMPLES, 0, "Stock", 24)
         write_plate_map(plate_array, source_map_file)
 
+        ' Calculate plates needed, note no row waste
         Dim n_dilution_plates As Integer
         Dim n_target_plates As Integer
         If N_10xDIL <= 6 Then
             'Dilution plate can host 16 samples
-            n_dilution_plates = CInt(Math.Ceiling(N_SAMPLES / 16))
+            n_dilution_plates = CInt(Math.Ceiling(N_SAMPLES * NREP_DILUTION / 16))
         Else
             'Dilution plate can host 8 samples
-            n_dilution_plates = CInt(Math.Ceiling(N_SAMPLES / 8))
+            n_dilution_plates = CInt(Math.Ceiling(N_SAMPLES * NREP_DILUTION / 8))
         End If
+        ' Target plate can always host 16 samples
+        n_target_plates = CInt(Math.Ceiling(N_SAMPLES * NREP_DILUTION * NREP_SPOTTING / 16))
         Host.SetVariable("n_dilution_plates", n_dilution_plates)
+        Host.SetVariable("n_target_plates", n_target_plates)
+
+        Dim diluent_tips = Math.Pow(2, Math.Min(N_SAMPLES, 8)) - 1
+        Host.SetVariable("diluent_tips", diluent_tips)
+
+        Dim diluent_rows_remaining = N_SAMPLES * NREP_DILUTION
+        Host.SetVariable("diluent_rows_remaining", diluent_rows_remaining)
+        Host.SetVariable("diluent_loops", Math.Ceiling((diluent_rows_remaining - 1) \ 8) + 1)
+
 
 
 
