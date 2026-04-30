@@ -1,0 +1,90 @@
+Start VB
+Use this command to execute a Visual Basic (VB) script from within a script.
+
+FluentControl supports VB .NET instead of Visual Basic Scripting (VBScript) like EVOware. VB .NET offers many more options for interactions, but may be more complex. To get an idea of how to use this, take a look at the examples.
+
+GetAndSetNumVars.vb
+
+```vb.net
+Imports Microsoft.VisualBasic
+Imports System
+Imports Tecan.Core.Scripting
+Public Class TestClass
+Implements IScriptObject
+Private Host As IScriptingHost
+Public Property ScriptingHost() As IScriptingHost Implements
+IScriptObject.ScriptingHost
+Get
+Return Host
+End Get
+Set(ByVal value As IScriptingHost)
+Host = value
+End Set
+End Property
+Public Sub Execute() Implements IScriptObject.Execute
+Dim factor1 As Double
+Dim factor2 As Double
+Dim result As Double
+factor1 = Host.GetVariable("numValue1")
+factor2 = Host.GetVariable("numValue2")
+result = factor1 * factor2
+Host.SetVariable("result", result)
+End Sub
+End Class
+```
+
+GetAndSetForce.vb
+```vb.net
+Imports Microsoft.VisualBasic
+Imports System
+Imports Tecan.Core.Scripting
+Public Class TestClass
+Implements IScriptObject
+Private Host As IScriptingHost
+Public Property ScriptingHost() As IScriptingHost Implements
+IScriptObject.ScriptingHost
+Get
+Return Host
+End Get
+Set(ByVal value As IScriptingHost)
+Host = value
+End Set
+End Property
+Public Sub Execute() Implements IScriptObject.Execute
+Dim force As Integer
+force = Host.ResolveExpression("GetAttribute(""96 Well Flat[001]"", ""Force"")")
+force += 10
+Dim expression As String = String.Format("SetAttribute(""96 Well Flat[001]"", ""Force"", {0})", force)
+Host.ResolveExpression(expression)
+
+End Sub
+End Class
+```
+
+The VB.NET program has to implement a certain interface in order to be loaded and compiled by FluentControl. This is a small sample program:
+
+```vb.net
+Imports Microsoft.VisualBasic
+Imports System
+Imports Tecan.Core.Scripting
+
+Public Class TestClass
+    Implements IScriptObject
+
+    Private Host As IScriptingHost
+
+    Public Property ScriptingHost() As IScriptingHost Implements IScriptObject.ScriptingHost
+        Get
+            Return Host
+        End Get
+        Set(ByVal value As IScriptingHost)
+            Host = value
+        End Set
+    End Property
+
+    Public Sub Execute() Implements IScriptObject.Execute
+        // INSERT YOUR CODE HERE
+    End Sub
+
+End Class
+```
