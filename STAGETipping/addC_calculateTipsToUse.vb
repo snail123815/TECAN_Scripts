@@ -19,6 +19,9 @@ Public Class TestClass
     End Property
 
     Public Sub Execute() Implements IScriptObject.Execute
+        ' This script runs every column (8 samples)
+
+        ' PLATE MAP file path.
         Dim plateMapFilePath As String = "C:\Users\Public\Documents\proteomics\STAGETipping_addC_plateMap.txt"
 
         Dim MAKE_MIX As Boolean = Host.GetVariable("MAKE_MIX")
