@@ -103,6 +103,7 @@ Public Class TestClass
         Dim sampleOffset As Integer = Host.GetVariable("OFFSET_SAMPLES")
         Dim nSamples As Integer = Host.GetVariable("N_SAMPLES")
         Dim nloops_add_c As Integer = 0
+        Dim tipSelection As Integer = 0
 
         ' Parse the variable C file and calculate tip selections
         Dim parsedData As Tuple(Of Single(,), Integer()) = ReadColumnVolumesAndTipSelections(variableCPath, sampleOffset, nSamples, logFilePath)
@@ -123,10 +124,13 @@ Public Class TestClass
             If tipSelectionByColumn(columnIndex) > 0 Then
                 nloops_add_c += 1
             End If
+            tipSelection = Math.Max(tipSelection, tipSelectionByColumn(columnIndex))
         Next
         WriteLog(logFilePath, String.Format("Calculated nloops_add_c={0} based on variable C values", nloops_add_c))
+        WriteLog(logFilePath, String.Format("Calculated tip_selection={0} based on variable C values", tipSelection))
 
         Host.SetVariable("nloops_add_c", nloops_add_c)
+        Host.SetVariable("tip_selection", tipSelection)
 
         WriteLog(logFilePath, String.Format("Finished executing {0} at {1}", "addC_varC_readvols.vb", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")))
         WriteLog(logFilePath, "")
